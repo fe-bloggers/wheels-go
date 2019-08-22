@@ -1,11 +1,12 @@
 class Vue {
     constructor({
         el,
-        data
+        data,
+        testTpl
     }) {
         this.el = el;
         this.data = data;
-        this.getHtmlString();
+        this.getHtmlString(testTpl);
     }
 
     static leftMustache = '{{';
@@ -22,8 +23,10 @@ class Vue {
     static closeLabelReg = '>'
     static vValueReg = `=['"](.+)['"]`
 
-    getHtmlString() {
-        this._dom = document.querySelector(this.el)
+    getHtmlString(testTpl) {
+        this._dom = document.querySelector(this.el) || {
+            outerHTML: testTpl
+        }
 
         if (!this._dom) {
             throw new Error('no dom found, please check your el');

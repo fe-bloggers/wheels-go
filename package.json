@@ -1,0 +1,15 @@
+{
+  "name": "dyy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "karma start karma.conf.js"
+  },
+  "devDependencies": {
+    "karma-coverage": "^1.1.2",
+    "karma-jasmine": "^2.0.1"
+  },
+  "author": "",
+  "license": "ISC"
+}

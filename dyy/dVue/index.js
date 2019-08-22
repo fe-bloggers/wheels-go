@@ -41,32 +41,16 @@ class Vue {
     }
 
     getMustacheVariables(str) {
+        const reg = new RegExp('{{([^{}]*)}}', 'g')
         const { leftMustache, rightMustache } = Vue;
         const leftMustacheArr = str.split(leftMustache);
 
-        for (let i = 0, len = leftMustacheArr.length; i < len; i++) {
-            const s = leftMustacheArr[i];
-            const rightMustacheArr = s.split(rightMustache);
-
-            // 缺少 rightMustache 的情况
-            if (rightMustacheArr.length === 1) {
-                // 首位可以没有 rightMustache
-                if (i === 0) {
-                    continue;
-                }
-
-                throw new Error(`Mustache must be couple, at the ${i}th ${leftMustache}`);
-            } else if (rightMustacheArr.length > 2) {
-                // 多余 rightMustache 的情况
-                throw new Error(`Mustache must be couple, at the ${i}th ${leftMustache}`);
-            } else {
-                const variable = rightMustacheArr[0];
-                let value = variable.trim()
-                value = this.calculateJsValue(value)
-                value = this.calculateHtmlValue(value)
-                str = str.replace(`${leftMustache}${variable}${rightMustache}`, value)
-            }
-        }
+        str = str.replace(reg, (match, p1) => {
+            let value = p1.trim()
+            value = this.calculateJsValue(value)
+            value = this.calculateHtmlValue(value)
+            return value
+        })
 
         return str;
     }

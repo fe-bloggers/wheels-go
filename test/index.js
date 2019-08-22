@@ -1,29 +1,3 @@
-const tpl = `
-    <div id="app">
-        <h3>文本</h3>
-        <p>{{ message }}</p>
-        <h3>原始 HTML</h3>
-        <p>Using mustaches: {{ rawHtml }}</p>
-        <p>Using v-html directive: <span v-html="rawHtml"></span></p>
-        <h3>特性</h3>
-        <div>
-            <input type="checkbox" id="todo1" checked>
-            <label for="todo1">Mustache 语法不能作用在 HTML 特性上</label>
-        </div>
-        <div>
-            <input type="checkbox" id="todo2" checked>
-            <label for="todo2">多个属性处理</label>
-        </div>
-        <p>&lt;div v-bind:id="dynamicId"&gt;&lt;/div&gt;</p>
-        <div :class="{{dynamicClass}}">dynamicId</div>
-        <div :class="dynamicClass">dynamicId</div>
-        <div v-bind:id="dynamicId">dynamicId</div>
-        <button v-bind:disabled="isButtonDisabled">Button</button>
-        <h3>使用 JavaScript 表达式</h3>
-        <p>{{ message.split('').reverse().join('') }}</p>
-    </div>
-`
-
 describe("Vue {{}} test: ", function() {
     // 文本
     it("text --> ", function(){

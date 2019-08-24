@@ -24,7 +24,7 @@ function iteratorDoms(elements) {
     }
     // 通过栈解析双花括号是否正确闭合，正确的解析出值
     if (elements[i]) {
-      // 1.解析文本
+      // 1.解析文本和js表达式
       let s = elements[i].innerHTML
       elements[i].innerHTML = parseText(s)
       // 2.解析HTML
@@ -35,6 +35,10 @@ function iteratorDoms(elements) {
   }
 }
 
+/**
+ * 解析双括号
+ * @param {*} s 元素内部HTML
+ */
 function parseText(s) {
   const arr = s.split('')
   const res = []
@@ -99,6 +103,10 @@ function parseText(s) {
   return res.join('')
 }
 
+/**
+ * 解析HTML绑定
+ * @param {*} element
+ */
 function parseHTML(element) {
   // 处理HTML
   const attr = element.getAttribute('v-html')
@@ -114,6 +122,10 @@ function parseHTML(element) {
   }
 }
 
+/**
+ * 解析属性绑定
+ * @param {*} element
+ */
 function parseAttr(element) {
   // 处理特性
   for (let i = 0; i < element.attributes.length; i++) {
@@ -136,6 +148,10 @@ function parseAttr(element) {
   }
 }
 
+/**
+ * 解析JS表达式
+ * @param {*} s
+ */
 function parseJS(s) {
   const value = eval(s)
   return `<yzz type="js">${value ? value : ''}</yzz>`

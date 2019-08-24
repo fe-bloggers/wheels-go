@@ -54,7 +54,12 @@
       <a v-on:click="alertMe">点击弹窗函数</a>
       <h3>动态参数</h3>
       <a v-bind:[attributename]="url" target="_blank"> v-bind:href动态指令 </a>
+      <br>
       <a v-on:[eventname]="alertMe"> 绑定处理函数（鼠标移入弹窗） </a>
+      <br>
+      这会触发一个编译警告：
+      <a v-bind:['id' + number]="dynamicId"> 绑定个啥 </a>
+      <br>
     </yzz>
   </body>
   <script src="./index.js"></script>

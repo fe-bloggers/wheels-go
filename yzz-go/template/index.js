@@ -173,7 +173,11 @@
         try {
           // 动态指令中可能包含js表达式
           value = eval(value)
-          element.setAttribute(name, value)
+          if (value) {
+            element.setAttribute(name, value)
+          } else {
+            console.warn(`Can\'t resolved ${element.attributes[i].name}`)
+          }
         } catch {
           console.log(eval(value))
         }

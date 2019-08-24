@@ -65,6 +65,8 @@ function parseText(s) {
                   value = data[name]
                     .replace(/<[^<>]+>/g, '')
                     .replace(/&nbsp;/gi, '')
+                } else {
+                  value = parseJS(varName)
                 }
                 tmpS = `<yzz name="${name}">${value}</yzz>`
                 // 重置参数
@@ -82,15 +84,7 @@ function parseText(s) {
             }
           } else {
             // 变量名
-            if (regx.test(arr[k]) || arr[k] === ' ') {
-              varName += arr[k]
-            } else {
-              // 变量名不符合规则
-              flag = false
-              k += varName.length
-              j = k
-              break
-            }
+            varName += arr[k]
           }
         }
         j = k
@@ -136,4 +130,12 @@ function parseAttr(element) {
       }
     }
   }
+}
+
+function parseJS(s) {
+  console.log(s)
+  const script = document.createElement('script')
+  script.type = 'text/javascript'
+  script.innerHTML = s
+  document.appendChild(script)
 }

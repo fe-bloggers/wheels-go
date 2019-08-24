@@ -18,6 +18,20 @@
     <p>Using v-html directive: <span v-html="rawHtml"></span></p>
     <div v-bind:id="dynamicId"></div>
     <button v-bind:disabled="isButtonDisabled">Button</button>
+    <br />
+    <div>
+      {{ number + 1 }}
+
+      {{ ok ? 'YES' : 'NO' }}
+
+      {{
+        message
+          .split('')
+          .reverse()
+          .join('')
+      }}
+    </div>
+    <div v-bind:id="'list-' + id"></div>
   </body>
   <script src="./index.js"></script>
 </html>

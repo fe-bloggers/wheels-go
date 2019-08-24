@@ -13,19 +13,9 @@
   </head>
 
   <body>
-    <div v-bind:id="myId">
-      {{ a }}
-      <p>{{ b }}</p>
-      {{ c }}{{ a }}
-    </div>
-    <div>{{ d }}</div>
-    <div>{e}</div>
-    <div>{{{f}}}</div>
-    <p v-html="htmlText"></p>
-    <div>
-      <p v-html="a"></p>
-      <a v-bind:id="myId"><span v-html="ab"></span></a>
-    </div>
+    <span>Message: {{ msg }}</span>
+    <p>Using mustaches: {{ rawHtml }}</p>
+    <p>Using v-html directive: <span v-html="rawHtml"></span></p>
   </body>
   <script src="./index.js"></script>
 </html>

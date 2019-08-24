@@ -1,7 +1,6 @@
 const data = {
-  a: 'hello world',
-  ab: '!',
-  htmlText: '<span style="color:red;">哈哈哈</span>',
+  msg: 'hello world',
+  rawHtml: '<span style="color:red;">哈哈哈</span>',
   myId: 'testId',
 }
 
@@ -59,7 +58,13 @@ function parseText(s) {
               // 正确闭合，进行变量解析，并重置参数
               if (flag && varName) {
                 let name = varName.trim()
-                const value = data[name] ? data[name] : ''
+                let value = ''
+                if (data[name]) {
+                  // 只取纯文本内容
+                  value = data[name]
+                    .replace(/<[^<>]+>/g, '')
+                    .replace(/&nbsp;/gi, '')
+                }
                 tmpS = `<yzz name="${name}">${value}</yzz>`
                 // 重置参数
                 flag = true

@@ -38,17 +38,19 @@
           .reverse()
           .join('')
       }}
-      <h2>指令</h2>
-      <div v-bind:id="'list-' + id">listId</div>
-      <!-- 这是语句，不是表达式 -->
+      <div v-bind:id="'list-' + id">
+        属性值包含js表达式：属性id={{ 'list-' + id }}
+      </div>
+      这是语句，不是表达式：
       {{ var a = 1 }}
-
-      <!-- 流控制也不会生效，请使用三元表达式 -->
-      {{ if (ok) { return message } }}
-
       <br />
-      <a v-bind:href="url" target="_blank">指令</a>
-      <a v-bind:[attributename]="url" target="_blank"> 动态指令 </a>
+      流控制也不会生效，请使用三元表达式：
+      {{ if (ok) { return message } }}
+      <h2>指令</h2>
+      <a v-bind:href="url" target="_blank">v-bind:href指令</a>
+      <a v-bind:[attributename]="url" target="_blank"> v-bind:href动态指令 </a>
+      <br />
+      <a v-on:click="alertMe">点击弹窗函数</a>
     </yzz>
   </body>
   <script src="./index.js"></script>

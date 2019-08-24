@@ -1,7 +1,10 @@
 ;(function() {
+  // 这些都是eval解析js表达式的变量，暂时没想到怎么安排进data中
+  id = 'ID'
   ok = true
   number = 1
   message = 'hello'
+
   data = {
     msg: 'hello world',
     rawHtml: '<span style="color:red;">哈哈哈</span>',
@@ -9,6 +12,9 @@
     isButtonDisabled: true,
     url: 'https://cn.vuejs.org/v2/guide/syntax.html#参数',
     attributename: 'href',
+    alertMe: function() {
+      alert('Well done!')
+    },
   }
 
   const body = document.getElementsByTagName('body')[0]
@@ -132,19 +138,13 @@
   function parseAttr(element) {
     // 处理特性
     for (let i = 0; i < element.attributes.length; i++) {
-      if (element.attributes[i].name.slice(0, 7) === 'v-bind:') {
-        let name = element.attributes[i].name.slice(7)
-        const value = element.attributes[i].value
-        if (name[0] === '[' && name[name.length - 1] === ']') {
-          // 动态指令
-          name = name.slice(1, name.length - 1)
-          name = data[name]
-        }
-        if (name === 'disabled') {
-          element.disabled = !!data[value]
-        } else if (name) {
-          element.setAttribute(name, data[value])
-        }
+      const name = element.attributes[i].name
+      if (name.slice(0, 7) === 'v-bind:') {
+        bind(element, i)
+      } else if (name.slice(0, 5) === 'v-if:') {
+        show(elemnt, i)
+      } else if (name.slice(0, 5) === 'v-on:') {
+        onfunc(element, i)
       }
     }
     if (element && element.children) {
@@ -156,6 +156,38 @@
     }
   }
 
+  function bind(element, i) {
+    let name = element.attributes[i].name.slice(7)
+    let value = element.attributes[i].value
+    if (name[0] === '[' && name[name.length - 1] === ']') {
+      // 动态指令
+      name = name.slice(1, name.length - 1)
+      name = data[name]
+    }
+    if (name === 'disabled') {
+      element.disabled = !!data[value]
+    } else if (name) {
+      if (!data[value]) {
+        try {
+          // 动态指令中可能包含js表达式
+          value = eval(value)
+          element.setAttribute(name, value)
+        } catch {
+          console.log(eval(value))
+        }
+      } else {
+        element.setAttribute(name, data[value])
+      }
+    }
+  }
+
+  function show(element, i) {}
+
+  function onfunc(element, i) {
+    let name = element.attributes[i].name.slice(5)
+    let value = element.attributes[i].value
+    element.setAttribute('on' + name, 'data.' + value + '()')
+  }
   /**
    * 解析JS表达式
    * @param {*} s

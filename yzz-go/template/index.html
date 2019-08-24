@@ -47,6 +47,8 @@
       流控制也不会生效，请使用三元表达式：
       {{ if (ok) { return message } }}
       <h2>指令</h2>
+      <p v-if="seen">现在你看到我了</p>
+      <h3>参数</h3>
       <a v-bind:href="url" target="_blank">v-bind:href指令</a>
       <a v-bind:[attributename]="url" target="_blank"> v-bind:href动态指令 </a>
       <br />

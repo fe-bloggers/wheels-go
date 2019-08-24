@@ -12,6 +12,7 @@
     isButtonDisabled: true,
     url: 'https://cn.vuejs.org/v2/guide/syntax.html#参数',
     attributename: 'href',
+    seen: true,
     alertMe: function() {
       alert('Well done!')
     },
@@ -141,8 +142,8 @@
       const name = element.attributes[i].name
       if (name.slice(0, 7) === 'v-bind:') {
         bind(element, i)
-      } else if (name.slice(0, 5) === 'v-if:') {
-        show(elemnt, i)
+      } else if (name.slice(0, 5) === 'v-if') {
+        show(element, i)
       } else if (name.slice(0, 5) === 'v-on:') {
         onfunc(element, i)
       }
@@ -181,7 +182,14 @@
     }
   }
 
-  function show(element, i) {}
+  function show(element, i) {
+    let value = element.attributes[i].value
+    if (!data[value]) {
+      element.outerHTML = `<yzz name="${value}"><!-- ${
+        element.outerHTML
+      } --></yzz>`
+    }
+  }
 
   function onfunc(element, i) {
     let name = element.attributes[i].name.slice(5)

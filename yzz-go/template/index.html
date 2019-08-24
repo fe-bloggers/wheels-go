@@ -14,12 +14,20 @@
 
   <body>
     <yzz>
+      <h1>模板语法</h1>
+      <h2>插值</h2>
+
+      <h3>文本</h3>
       <span>Message: {{ msg }}</span>
+
+      <h3>原始 HTML</h3>
       <p>Using mustaches: {{ rawHtml }}</p>
       <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+
+      <h3>特性</h3>
       <div v-bind:id="dynamicId">bindId</div>
       <button v-bind:disabled="isButtonDisabled">Button</button>
-      <br />
+      <h3>使用 JavaScript 表达式</h3>
       {{ number + 1 }}
 
       {{ ok ? 'YES' : 'NO' }}
@@ -30,7 +38,8 @@
           .reverse()
           .join('')
       }}
-      <div v-bind:id="'list-' + id"></div>
+      <h2>指令</h2>
+      <div v-bind:id="'list-' + id">listId</div>
       <!-- 这是语句，不是表达式 -->
       {{ var a = 1 }}
 

@@ -16,6 +16,8 @@
     <span>Message: {{ msg }}</span>
     <p>Using mustaches: {{ rawHtml }}</p>
     <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+    <div v-bind:id="dynamicId"></div>
+    <button v-bind:disabled="isButtonDisabled">Button</button>
   </body>
   <script src="./index.js"></script>
 </html>

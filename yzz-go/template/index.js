@@ -2,6 +2,7 @@ const data = {
   msg: 'hello world',
   rawHtml: '<span style="color:red;">哈哈哈</span>',
   myId: 'testId',
+  isButtonDisabled: true,
 }
 
 const body = document.getElementsByTagName('body')[0]
@@ -121,7 +122,11 @@ function parseAttr(element) {
     if (element.attributes[i].name.slice(0, 7) === 'v-bind:') {
       const name = element.attributes[i].name.slice(7)
       const value = element.attributes[i].value
-      element.setAttribute(name, data[value])
+      if (name === 'disabled') {
+        element.disabled = !!data[value]
+      } else {
+        element.setAttribute(name, data[value])
+      }
     }
   }
   if (element && element.children) {

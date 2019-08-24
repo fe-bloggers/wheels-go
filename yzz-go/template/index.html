@@ -36,6 +36,10 @@
 
       <!-- 流控制也不会生效，请使用三元表达式 -->
       {{ if (ok) { return message } }}
+
+      <br />
+      <a v-bind:href="url" target="_blank">指令</a>
+      <a v-bind:[attributename]="url" target="_blank"> 动态指令 </a>
     </yzz>
   </body>
   <script src="./index.js"></script>

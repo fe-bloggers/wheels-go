@@ -6,6 +6,8 @@ const data = {
   rawHtml: '<span style="color:red;">哈哈哈</span>',
   dynamicId: 'testId',
   isButtonDisabled: true,
+  url: 'https://cn.vuejs.org/v2/guide/syntax.html#参数',
+  attributename: 'href',
 }
 
 const body = document.getElementsByTagName('body')[0]
@@ -130,11 +132,16 @@ function parseAttr(element) {
   // 处理特性
   for (let i = 0; i < element.attributes.length; i++) {
     if (element.attributes[i].name.slice(0, 7) === 'v-bind:') {
-      const name = element.attributes[i].name.slice(7)
+      let name = element.attributes[i].name.slice(7)
       const value = element.attributes[i].value
+      if (name[0] === '[' && name[name.length - 1] === ']') {
+        // 动态指令
+        name = name.slice(1, name.length - 1)
+        name = data[name]
+      }
       if (name === 'disabled') {
         element.disabled = !!data[value]
-      } else {
+      } else if (name) {
         element.setAttribute(name, data[value])
       }
     }

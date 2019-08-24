@@ -11,12 +11,12 @@
     dynamicId: 'testId',
     isButtonDisabled: true,
     url: 'https://cn.vuejs.org/v2/guide/syntax.html#参数',
-    attributename: 'href', // TODO:属性值不知为何自动转小写
+    attributename: 'href', // TODO:属性值不知为何就自动转小写了
     seen: true,
     alertMe: function() {
       alert('Well done!')
     },
-    eventname: 'click',
+    eventname: 'mouseenter', // TODO:属性值不知为何就自动转小写了
   }
 
   const body = document.getElementsByTagName('body')[0]

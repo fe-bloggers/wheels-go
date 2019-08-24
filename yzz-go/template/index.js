@@ -2,6 +2,7 @@ const data = {
   a: 'hello world',
   ab: '!',
   htmlText: '<span style="color:red;">哈哈哈</span>',
+  myId: 'testId',
 }
 
 const body = document.getElementsByTagName('body')[0]
@@ -24,7 +25,9 @@ function iteratorDoms(elements) {
       let s = elements[i].innerHTML
       elements[i].innerHTML = parseText(s)
       // 2.解析HTML
-      elements[i] = parseAttr(elements[i])
+      parseHTML(elements[i])
+      // 3.解析特性
+      parseAttr(elements[i])
     }
   }
 }
@@ -92,12 +95,31 @@ function parseText(s) {
   return res.join('')
 }
 
-function parseAttr(element) {
+function parseHTML(element) {
+  // 处理HTML
   const attr = element.getAttribute('v-html')
   if (attr) {
     const value = data[attr] ? data[attr] : ''
     element.innerHTML = `<yzz name="${attr}">${value}</yzz>`
-  } else if (element && element.childNodes) {
+  } else if (element && element.children) {
+    for (let i = 0; i < element.children.length; i++) {
+      if (element.children[i]) {
+        parseHTML(element.children[i])
+      }
+    }
+  }
+}
+
+function parseAttr(element) {
+  // 处理特性
+  for (let i = 0; i < element.attributes.length; i++) {
+    if (element.attributes[i].name.slice(0, 7) === 'v-bind:') {
+      const name = element.attributes[i].name.slice(7)
+      const value = element.attributes[i].value
+      element.setAttribute(name, data[value])
+    }
+  }
+  if (element && element.children) {
     for (let i = 0; i < element.children.length; i++) {
       if (element.children[i]) {
         parseAttr(element.children[i])

@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
+    <style>
+      #testId {
+        color: blue;
+      }
+    </style>
   </head>
 
   <body>
-    <div>
+    <div v-bind:id="myId">
       {{ a }}
       <p>{{ b }}</p>
       {{ c }}{{ a }}
@@ -19,7 +24,7 @@
     <p v-html="htmlText"></p>
     <div>
       <p v-html="a"></p>
-      <a><span v-html="ab"></span></a>
+      <a v-bind:id="myId"><span v-html="ab"></span></a>
     </div>
   </body>
   <script src="./index.js"></script>

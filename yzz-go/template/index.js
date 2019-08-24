@@ -1,51 +1,100 @@
 const data = {
-    a: 'hello world',
-    ab: '!'
+  a: 'hello world',
+  ab: '!',
+  html: '<span style="color:red;">哈哈哈</span>',
 }
 
 const body = document.getElementsByTagName('body')[0]
 if (body) {
-    const elements = body.children
-    if (elements && elements.length) {
-        this.iteratorDoms(elements)
-    }
+  const elements = body.children
+  if (elements && elements.length) {
+    this.iteratorDoms(elements)
+  }
 }
 
 function iteratorDoms(elements) {
-    const regx = /([\{]{2})([a-zA-Z]{1,})([\}]{2})/g
-    const mulLeftRegx = /([\{]{3,})/g
-    const mulRightRegx = /([\}]{3,})/g
-    for (let i = 0; i < elements.length; i++) {
-        if (elements[i].tagName === 'script') {
-            continue
-        }
-        if (elements[i].firstChild && elements[i].firstChild.nodeValue) {
-            let s = elements[i].innerText
-            const arr = s.match(regx)
-            if ((s.indexOf('{') > -1 || s.indexOf('}') > -1) && !arr) {
-                console.error('Can\'t resolve template' + s + ' !')
-                continue
-            }
-            if (mulLeftRegx.test(s) || mulLeftRegx.test(s)) {
-                console.error('Can\'t resolve multiple brackets! ERROR Template: ' + s)
-            }
-            if (arr) {
-                arr.forEach(item => {
-                    const name = item.slice(2, item.length - 2)
-                    if (data.hasOwnProperty(name)) {
-                        s = s.replace('{{' + name + '}}', data[name])
-                        elements[i].innerText = s
-                    } else {
-                        s = s = s.replace('{{' + name + '}}', '')
-                        elements[i].innerText = s
-                        console.error('Can\'t find variable ' + name + ' !')
-                    }
-                })
-            }
-        }
-        // 递归遍历DOM
-        if (elements[i].children && elements[i].children.length > 0) {
-            this.iteratorDoms(elements[i].children)
-        }
+  for (let i = 0; i < elements.length; i++) {
+    // 不解析script脚本内容
+    if (elements[i].tagName === 'script') {
+      continue
     }
+    // 通过栈解析双花括号是否正确闭合，正确的解析出值
+    if (elements[i]) {
+      // 1.解析文本
+      let s = elements[i].innerHTML
+      elements[i].innerHTML = parseText(s)
+      // 2.解析HTML
+      parseAttr(elements[i])
+    }
+  }
+}
+
+function parseText(s) {
+  const regx = /[a-zA-Z]/
+  const arr = s.split('')
+  const res = []
+  for (let j = 0; j < arr.length; j++) {
+    let tmpS = arr[j]
+    if (arr[j].trim(' ')) {
+      let varName = ''
+      // 遇到两个连着的左括号，开始解析变量
+      if (
+        arr[j] === '{' &&
+        j + 1 < arr.length &&
+        arr[j + 1] === '{' &&
+        (j + 2 >= arr.length || (j + 2 < arr.length && arr[j + 2] !== '{'))
+      ) {
+        let k = j + 2
+        if (arr[j] === ' ') {
+          k++
+        }
+        let flag = true // 括号是否正确闭合
+        for (; k < arr.length - 1; k++) {
+          if (arr[k] === '}') {
+            // 遇到第一个右括号，如果下一个字符也是右括号，说明正确闭合
+            if (arr[k + 1] === '}') {
+              // 正确闭合，进行变量解析，并重置参数
+              if (flag && varName) {
+                let name = varName.trim()
+                const value = data[name] ? data[name] : ''
+                tmpS = `<yzz name="${name}">${value}</yzz>`
+                // 重置参数
+                flag = true
+                varName = ''
+                k += 1 + varName.length // 需要跳过变量名长度，并前进一步
+                j = k
+                break
+              }
+            } else {
+              // 下一个字符不是右括号，没有正确闭合
+              flag = false
+              j = k
+              break
+            }
+          } else {
+            // 变量名
+            if (regx.test(arr[k]) || arr[k] === ' ') {
+              varName += arr[k]
+            } else {
+              // 变量名不符合规则
+              flag = false
+              k += varName.length
+              j = k
+              break
+            }
+          }
+        }
+        j = k
+      }
+    }
+    res.push(tmpS)
+  }
+  return res.join('')
+}
+
+function parseAttr(element) {
+  console.log(222, element.getAttribute())
+  if (element && element.ch) {
+    for (let i = 0; i < element.children.length; i++) {}
+  }
 }

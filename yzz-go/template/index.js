@@ -1,7 +1,7 @@
 const data = {
   a: 'hello world',
   ab: '!',
-  html: '<span style="color:red;">哈哈哈</span>',
+  htmlText: '<span style="color:red;">哈哈哈</span>',
 }
 
 const body = document.getElementsByTagName('body')[0]
@@ -24,7 +24,7 @@ function iteratorDoms(elements) {
       let s = elements[i].innerHTML
       elements[i].innerHTML = parseText(s)
       // 2.解析HTML
-      parseAttr(elements[i])
+      elements[i] = parseAttr(elements[i])
     }
   }
 }
@@ -93,8 +93,15 @@ function parseText(s) {
 }
 
 function parseAttr(element) {
-  console.log(222, element.getAttribute())
-  if (element && element.ch) {
-    for (let i = 0; i < element.children.length; i++) {}
+  const attr = element.getAttribute('v-html')
+  if (attr) {
+    const value = data[attr] ? data[attr] : ''
+    element.innerHTML = `<yzz name="${attr}">${value}</yzz>`
+  } else if (element && element.childNodes) {
+    for (let i = 0; i < element.children.length; i++) {
+      if (element.children[i]) {
+        parseAttr(element.children[i])
+      }
+    }
   }
 }

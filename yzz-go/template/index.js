@@ -11,12 +11,15 @@
     dynamicId: 'testId',
     isButtonDisabled: true,
     url: 'https://cn.vuejs.org/v2/guide/syntax.html#参数',
-    attributename: 'href', // TODO:属性值不知为何就自动转小写了
+    attributename: 'href', // 浏览器会自动把属性名转小写
     seen: true,
     alertMe: function() {
       alert('Well done!')
     },
-    eventname: 'mouseenter', // TODO:属性值不知为何就自动转小写了
+    eventname: 'mouseenter', // 浏览器会自动把属性名转小写
+    onSubmit: function() {
+      console.log('已提交表单')
+    },
   }
 
   const body = document.getElementsByTagName('body')[0]
@@ -66,7 +69,7 @@
           } else if (arr[j] === '{') {
             console.error(
               'ERROR: Template can\'t parse "{", plaese check out your HTML expression!',
-              s
+              s.slice(0, 30)
             )
           }
           let flag = true // 括号是否正确闭合
@@ -205,7 +208,20 @@
       name = data[name] ? data[name] : ''
     }
     if (name) {
-      element.setAttribute('on' + name, 'data.' + value + '()')
+      if (name.indexOf('.') > -1) {
+        const nameKey = name.split('.')[0]
+        const nameEvent = name.split('.')[1]
+        console.log(111, nameKey, nameEvent)
+        if (nameEvent === 'prevent') {
+          element.setAttribute('on' + nameKey, 'data.' + value + '()')
+          element.setAttribute(
+            'on' + nameKey,
+            'event.' + nameEvent + 'Default()'
+          )
+        }
+      } else {
+        element.setAttribute('on' + name, 'data.' + value + '()')
+      }
     }
   }
   /**

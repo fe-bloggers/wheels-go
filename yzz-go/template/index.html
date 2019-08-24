@@ -58,8 +58,13 @@
       <a v-on:[eventname]="alertMe"> 绑定处理函数（鼠标移入弹窗） </a>
       <br>
       这会触发一个编译警告：
-      <a v-bind:['id' + number]="dynamicId"> 绑定个啥 </a>
+      <a v-bind:['id' + number]="dynamicId"> Can't resolved v-bind: xxx</a>
       <br>
+      <h3>修饰符</h3>
+      <form v-on:submit.prevent="onSubmit">
+        阻止表单默认提交事件
+        <input type="submit" value="提交" /> 
+      </form>
     </yzz>
   </body>
   <script src="./index.js"></script>

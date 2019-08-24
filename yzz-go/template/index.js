@@ -4,12 +4,13 @@ const message = 'hello'
 const data = {
   msg: 'hello world',
   rawHtml: '<span style="color:red;">哈哈哈</span>',
-  myId: 'testId',
+  dynamicId: 'testId',
   isButtonDisabled: true,
 }
 
 const body = document.getElementsByTagName('body')[0]
 if (body) {
+  console.log(body.children)
   const elements = body.children
   if (elements && elements.length) {
     this.iteratorDoms(elements)
@@ -70,8 +71,7 @@ function parseText(s) {
                     .replace(/&nbsp;/gi, '')
                   tmpS = `<yzz name="${name}">${value}</yzz>`
                 } else {
-                  parseJS(varName)
-                  tmpS = varName
+                  tmpS = parseJS(varName)
                 }
 
                 // 重置参数
@@ -138,9 +138,6 @@ function parseAttr(element) {
 }
 
 function parseJS(s) {
-  const script = document.createElement('script')
-  script.type = 'text/javascript'
-  script.innerHTML = s
-  console.log(script)
-  document.body.appendChild(script)
+  const value = eval(s)
+  return `<yzz type="js">${value}</yzz>`
 }

@@ -13,13 +13,13 @@
   </head>
 
   <body>
-    <span>Message: {{ msg }}</span>
-    <p>Using mustaches: {{ rawHtml }}</p>
-    <p>Using v-html directive: <span v-html="rawHtml"></span></p>
-    <div v-bind:id="dynamicId"></div>
-    <button v-bind:disabled="isButtonDisabled">Button</button>
-    <br />
-    <div>
+    <yzz>
+      <span>Message: {{ msg }}</span>
+      <p>Using mustaches: {{ rawHtml }}</p>
+      <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+      <div v-bind:id="dynamicId">bindId</div>
+      <button v-bind:disabled="isButtonDisabled">Button</button>
+      <br />
       {{ number + 1 }}
 
       {{ ok ? 'YES' : 'NO' }}
@@ -30,8 +30,8 @@
           .reverse()
           .join('')
       }}
-    </div>
-    <div v-bind:id="'list-' + id"></div>
+      <div v-bind:id="'list-' + id"></div>
+    </yzz>
   </body>
   <script src="./index.js"></script>
 </html>

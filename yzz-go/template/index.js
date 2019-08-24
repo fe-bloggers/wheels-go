@@ -10,7 +10,6 @@ const data = {
 
 const body = document.getElementsByTagName('body')[0]
 if (body) {
-  console.log(body.children)
   const elements = body.children
   if (elements && elements.length) {
     this.iteratorDoms(elements)
@@ -37,7 +36,6 @@ function iteratorDoms(elements) {
 }
 
 function parseText(s) {
-  const regx = /[a-zA-Z]/
   const arr = s.split('')
   const res = []
   for (let j = 0; j < arr.length; j++) {
@@ -45,15 +43,16 @@ function parseText(s) {
     if (arr[j].trim(' ')) {
       let varName = ''
       // 遇到两个连着的左括号，开始解析变量
-      if (
-        arr[j] === '{' &&
-        j + 1 < arr.length &&
-        arr[j + 1] === '{' &&
-        (j + 2 >= arr.length || (j + 2 < arr.length && arr[j + 2] !== '{'))
-      ) {
+
+      if (arr[j] === '{' && j + 1 < arr.length && arr[j + 1] === '{') {
         let k = j + 2
         if (arr[j] === ' ') {
           k++
+        } else if (arr[j] === '{') {
+          console.error(
+            'ERROR: Template can\'t parse "{", plaese check out your HTML expression!',
+            s
+          )
         }
         let flag = true // 括号是否正确闭合
         for (; k < arr.length - 1; k++) {
@@ -139,5 +138,5 @@ function parseAttr(element) {
 
 function parseJS(s) {
   const value = eval(s)
-  return `<yzz type="js">${value}</yzz>`
+  return `<yzz type="js">${value ? value : ''}</yzz>`
 }

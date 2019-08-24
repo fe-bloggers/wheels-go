@@ -11,11 +11,12 @@
     dynamicId: 'testId',
     isButtonDisabled: true,
     url: 'https://cn.vuejs.org/v2/guide/syntax.html#参数',
-    attributename: 'href',
+    attributename: 'href', // TODO:属性值不知为何自动转小写
     seen: true,
     alertMe: function() {
       alert('Well done!')
     },
+    eventname: 'click',
   }
 
   const body = document.getElementsByTagName('body')[0]
@@ -194,7 +195,14 @@
   function onfunc(element, i) {
     let name = element.attributes[i].name.slice(5)
     let value = element.attributes[i].value
-    element.setAttribute('on' + name, 'data.' + value + '()')
+    if (name[0] === '[' && name[name.length - 1] === ']') {
+      // 动态指令
+      name = name.slice(1, name.length - 1)
+      name = data[name] ? data[name] : ''
+    }
+    if (name) {
+      element.setAttribute('on' + name, 'data.' + value + '()')
+    }
   }
   /**
    * 解析JS表达式

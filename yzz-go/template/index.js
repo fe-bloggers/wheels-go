@@ -1,3 +1,6 @@
+const ok = true
+const number = 1
+const message = 'hello'
 const data = {
   msg: 'hello world',
   rawHtml: '<span style="color:red;">哈哈哈</span>',
@@ -65,10 +68,12 @@ function parseText(s) {
                   value = data[name]
                     .replace(/<[^<>]+>/g, '')
                     .replace(/&nbsp;/gi, '')
+                  tmpS = `<yzz name="${name}">${value}</yzz>`
                 } else {
-                  value = parseJS(varName)
+                  parseJS(varName)
+                  tmpS = varName
                 }
-                tmpS = `<yzz name="${name}">${value}</yzz>`
+
                 // 重置参数
                 flag = true
                 varName = ''
@@ -133,9 +138,9 @@ function parseAttr(element) {
 }
 
 function parseJS(s) {
-  console.log(s)
   const script = document.createElement('script')
   script.type = 'text/javascript'
   script.innerHTML = s
-  document.appendChild(script)
+  console.log(script)
+  document.body.appendChild(script)
 }

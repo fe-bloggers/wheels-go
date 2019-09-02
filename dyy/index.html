@@ -7,6 +7,7 @@
   }
 </style>
 
+<h2>插值</h2>
 <div id="app">
   <h3>文本</h3>
   <p>{{ message }}</p>
@@ -33,5 +34,37 @@
   <p>{{ message.split('').reverse().join('') }}</p>
 </div>
 
+<h2>指令</h2>
+<div id="app1">
+  <h3>参数</h3>
+  <p v-if="seen">现在你看到我了，下面还有一个看不到的</p>
+  <p v-if="!seen">现在你看不到我了</p>
+  <a v-bind:href="url">百度</a><br/>
+  <a v-on:click="clickAlert">click alert</a><br/>
+
+  <h3>动态参数</h3>
+  <a v-bind:[attributename]="url">动态百度</a><br/>
+  <a v-on:[eventname]="clickAlert"> dynamic click alert</a><br/>
+  <!-- 这会触发一个编译警告 -->
+  <a v-bind:['foo' + bar]="url">编译警告</a><br/>
+  <!-- 在 DOM 中使用模板时这段代码会被转换为 `v-bind:[someattr]` -->
+  <a v-bind:[attributeName]="url">驼峰转换</a><br/>
+
+  <h3>修饰符</h3>
+  <form v-on:submit.prevent="clickAlert">
+    <button>test prevent</button>
+  </form>
+</div>
+
+<h2>缩写</h2>
+<div id="app2">
+  <h3>v-bind 缩写</h3>
+  <a :href="url">百度</a>
+
+  <h3>v-on 缩写</h3>
+  <a @click="clickAlert">click alert</a>
+</div>
+
 <script src="./dVue/index.js"></script>
+<script src="./dVue/commands.js"></script>
 <script src="./index.js"></script>

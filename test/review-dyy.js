@@ -10,7 +10,7 @@ describe("Vue review test: ", function() {
                 message1,
             }
         });
-        expect(expectRes).toEqual(vueIns._dom.outerHTML);
+        expect(expectRes).toEqualWithoutVid(vueIns._dom.innerHTML);
     });
 
     // 模板中含有{{{}}}
@@ -24,6 +24,6 @@ describe("Vue review test: ", function() {
                 message,
             }
         });
-        expect(expectRes).toEqual(vueIns._dom.outerHTML);
+        expect(expectRes).toEqualWithoutVid(vueIns._dom.innerHTML);
     });
 });

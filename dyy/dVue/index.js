@@ -2,10 +2,14 @@ class Vue {
     constructor({
         el,
         data,
+        methods,
         testTpl
     }) {
         this.el = el;
         this.data = data;
+        this.methods = methods;
+        this._vid = 0;
+        this._eventQueue = {};
         this.getHtmlString(testTpl);
     }
 
@@ -25,19 +29,28 @@ class Vue {
 
     getHtmlString(testTpl) {
         this._dom = document.querySelector(this.el) || {
-            outerHTML: testTpl
+            innerHTML: testTpl
         }
 
         if (!this._dom) {
             throw new Error('no dom found, please check your el');
         }
 
-        const htmlString = this._dom.outerHTML
-        let str = this.handleVHtml(htmlString)
-        str = this.handleVAttrs(str)
-
+        const htmlString = this._dom.innerHTML
+        const tmpNode = document.createElement('div');
+        tmpNode.innerHTML = htmlString;
+        // 处理 dom
+        this.traverseDom(tmpNode, (ch) => {
+            return this.attrHandles(ch)
+        });
+        
+        // 只处理 string
+        let str = tmpNode.innerHTML
         str = this.getMustacheVariables(str)
-        this._dom.outerHTML = str
+
+        this._dom.innerHTML = str
+        
+        this.bindEvents();
     }
 
     getMustacheVariables(str) {
@@ -55,74 +68,6 @@ class Vue {
         return str;
     }
 
-    handleVAttrs(str) {
-        const fns = [
-            'handleVBind'
-        ]
-        const {openLabelReg, closeLabelReg, leftMustache, rightMustache} = Vue
-        // <span v-html="rawHtml"></span>
-        const reg = new RegExp(`${openLabelReg}${closeLabelReg}`, 'g')
-        const matchRes = str.match(reg)
-
-        if (matchRes) {
-            const replaceArr = matchRes.map(attrStr => {
-                if (attrStr.indexOf(leftMustache) > -1 || attrStr.indexOf(rightMustache) > -1) {
-                    console.warn('html attrs can not use {{}}', attrStr)
-                    return []
-                }
-                const attrArr = attrStr.split(' ')
-
-                return attrArr.map(attr => {
-                    fns.forEach(fn => {
-                        attr = this[fn](attr)
-                    })
-                    return attr
-                })
-            })
-            let index = 0
-            str = str.replace(reg, (match) => {
-                return replaceArr[index++].join(' ')
-            })
-            
-        }
-
-        return str
-    }
-
-    /**
-     * 需要替换整体dom
-     * @param {*} str 
-     */
-    handleVHtml(str) {
-        const {leftLabelReg, rightLabelReg, vValueReg} = Vue
-        // <span v-html="rawHtml"></span>
-        const reg = new RegExp(`${leftLabelReg}v-html${vValueReg}${rightLabelReg}`, 'g') 
-
-        str = str.replace(reg, (match, p1, p2, p3) => {
-            return this.calculateJsValue(p3)
-        })
-
-        return str
-    }
-
-    handleVBind(str) {
-        const {leftLabelReg, rightLabelReg, vValueReg} = Vue
-        // <div v-bind:id="dynamicId">dynamicId</div>
-        const reg = new RegExp(`(v-bind)?(:)(\\S+)${vValueReg}`, 'g') 
-
-        str = str.replace(reg, (match, p1, p2, p3, p4) => {
-            const value = this.calculateJsValue(p4)
-
-            if (value) {
-                return match.replace(p1, '').replace(p2, '').replace(p4, value)
-            }
-
-            return ''
-        })
-
-        return str
-    }
-
     /**
      * 原始 HTML
      */
@@ -138,13 +83,15 @@ class Vue {
      * 文本
      * JavaScript 表达式
      */
-    calculateJsValue(str) {        
+    calculateJsValue(str) {
         /**
          * 特性
          *      v-bind
          */
-        
         const keys = Object.keys(this.data).join(', ')
+        /**
+         * note: eval 无法获取作用域
+         */
         const fn = new Function(`
             const {${keys}} = this
             return ${str}

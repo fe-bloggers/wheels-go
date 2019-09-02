@@ -1,42 +1,58 @@
-describe("Vue {{}} test: ", function() {
-    // 文本
-    it("text --> ", function(){
+const matchers = {
+    toEqualWithoutVid: (util, customEqualityTesters) => {
+        return {
+            compare: (actual, expected = '') => {
+                return {
+                    pass: expected.replace(/\sv-id="\d+"/g, '').trim() === actual.trim(),
+                }
+            }
+        }
+    }
+}
+
+beforeEach(function() {
+    jasmine.addMatchers(matchers);
+});
+
+describe("插值: ", function() {
+    it("文本 --> ", function(){
         const message = 'Hello Vue.js!'
-        const testTpl = `<p>{{ message }}</p>`
-        const expectRes = `<p>${message}</p>`
+        const testTpl = `
+            <p>{{ message }}</p>
+            <p>{{{ message }}}</p>
+            <p>{ message }</p>
+        `
+        const expectRes = `
+            <p>${message}</p>
+            <p>{${message}}</p>
+            <p>{ message }</p>
+        `
         const vueIns = new Vue({
             testTpl,
             data: {
                 message,
             }
         });
-        expect(expectRes).toEqual(vueIns._dom.outerHTML);
+        expect(expectRes).toEqualWithoutVid(vueIns._dom.innerHTML);
     });
 
-    // 原始 HTML
-    it("raw html 1 --> ", function(){
+    it("原始 HTM --> ", function(){
         const rawHtml = `<span style="color: red">This should be red.</span>`
-        const testTpl = `<p>Using mustaches: {{ rawHtml }}</p>`
-        const expectRes = `<p>Using mustaches: ${rawHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>`
+        const testTpl = `
+            <p>Using mustaches: {{ rawHtml }}</p>
+            <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+        `
+        const expectRes = `
+            <p>Using mustaches: ${rawHtml.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+            <p>Using v-html directive: ${rawHtml}</p>
+        `
         const vueIns = new Vue({
             testTpl,
             data: {
                 rawHtml,
             }
         });
-        expect(expectRes).toEqual(vueIns._dom.outerHTML);
-    });
-    it("raw html 2 --> ", function(){
-        const rawHtml = `<span style="color: red">This should be red.</span>`
-        const testTpl = `<p>Using v-html directive: <span v-html="rawHtml"></span></p>`
-        const expectRes = `<p>Using v-html directive: ${rawHtml}</p>`
-        const vueIns = new Vue({
-            testTpl,
-            data: {
-                rawHtml,
-            }
-        });
-        expect(expectRes).toEqual(vueIns._dom.outerHTML);
+        expect(expectRes).toEqualWithoutVid(vueIns._dom.innerHTML);
     });
 
     // 特性
@@ -50,7 +66,7 @@ describe("Vue {{}} test: ", function() {
                 dynamicClass,
             }
         });
-        expect(expectRes).toEqual(vueIns._dom.outerHTML);
+        expect(expectRes).toEqualWithoutVid(vueIns._dom.innerHTML);
     });
     it("attrs v-bind --> ", function(){
         const dynamicId = `bgGreen`
@@ -62,19 +78,19 @@ describe("Vue {{}} test: ", function() {
                 dynamicId,
             }
         });
-        expect(expectRes).toEqual(vueIns._dom.outerHTML);
+        expect(expectRes).toEqualWithoutVid(vueIns._dom.innerHTML);
     });
     it("attrs disabled --> ", function(){
         const isButtonDisabled = null
         const testTpl = `<button v-bind:disabled="isButtonDisabled">Button</button>`
-        const expectRes = `<button >Button</button>`
+        const expectRes = `<button>Button</button>`
         const vueIns = new Vue({
             testTpl,
             data: {
                 isButtonDisabled,
             }
         });
-        expect(expectRes).toEqual(vueIns._dom.outerHTML);
+        expect(expectRes).toEqualWithoutVid(vueIns._dom.innerHTML);
     });
 
     // 使用 JavaScript 表达式
@@ -88,6 +104,6 @@ describe("Vue {{}} test: ", function() {
                 message,
             }
         });
-        expect(expectRes).toEqual(vueIns._dom.outerHTML);
+        expect(expectRes).toEqualWithoutVid(vueIns._dom.innerHTML);
     });
 });

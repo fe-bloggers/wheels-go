@@ -1,23 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Document</title>
-</head>
+    <style>
+      #testId {
+        color: blue;
+      }
+    </style>
+  </head>
 
-<body>
-    <div>
-        {{a}}
-        <p>{{b}}</p>
-        {{c}}{{a}}
-    </div>
-    <div>{{d}}</div>
-    <div>{e}</div>
-    <div>{{{f}}}</div>
-</body>
-<script src="./index.js"></script>
+  <body>
+    <yzz>
+      <span>Message: {{ msg }}</span>
+      <p>Using mustaches: {{ rawHtml }}</p>
+      <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+      <div v-bind:id="dynamicId">bindId</div>
+      <button v-bind:disabled="isButtonDisabled">Button</button>
+      <br />
+      {{ number + 1 }}
 
+      {{ ok ? 'YES' : 'NO' }}
+
+      {{
+        message
+          .split('')
+          .reverse()
+          .join('')
+      }}
+      <div v-bind:id="'list-' + id"></div>
+      <!-- 这是语句，不是表达式 -->
+      {{ var a = 1 }}
+
+      <!-- 流控制也不会生效，请使用三元表达式 -->
+      {{ if (ok) { return message } }}
+    </yzz>
+  </body>
+  <script src="./index.js"></script>
 </html>

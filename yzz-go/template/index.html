@@ -14,12 +14,20 @@
 
   <body>
     <yzz>
+      <h1>模板语法</h1>
+      <h2>插值</h2>
+
+      <h3>文本</h3>
       <span>Message: {{ msg }}</span>
+
+      <h3>原始 HTML</h3>
       <p>Using mustaches: {{ rawHtml }}</p>
       <p>Using v-html directive: <span v-html="rawHtml"></span></p>
+
+      <h3>特性</h3>
       <div v-bind:id="dynamicId">bindId</div>
       <button v-bind:disabled="isButtonDisabled">Button</button>
-      <br />
+      <h3>使用 JavaScript 表达式</h3>
       {{ number + 1 }}
 
       {{ ok ? 'YES' : 'NO' }}
@@ -30,12 +38,33 @@
           .reverse()
           .join('')
       }}
-      <div v-bind:id="'list-' + id"></div>
-      <!-- 这是语句，不是表达式 -->
+      <div v-bind:id="'list-' + id">
+        属性值包含js表达式：属性id={{ 'list-' + id }}
+      </div>
+      这是语句，不是表达式：
       {{ var a = 1 }}
-
-      <!-- 流控制也不会生效，请使用三元表达式 -->
+      <br />
+      流控制也不会生效，请使用三元表达式：
       {{ if (ok) { return message } }}
+      <h2>指令</h2>
+      <p v-if="seen">现在你看到我了</p>
+      <h3>参数</h3>
+      <a v-bind:href="url" target="_blank">v-bind:href指令</a>
+      <br />
+      <a v-on:click="alertMe">点击弹窗函数</a>
+      <h3>动态参数</h3>
+      <a v-bind:[attributename]="url" target="_blank"> v-bind:href动态指令 </a>
+      <br>
+      <a v-on:[eventname]="alertMe"> 绑定处理函数（鼠标移入弹窗） </a>
+      <br>
+      这会触发一个编译警告：
+      <a v-bind:['id' + number]="dynamicId"> Can't resolved v-bind: xxx</a>
+      <br>
+      <h3>修饰符</h3>
+      <form v-on:submit.prevent="onSubmit">
+        阻止表单默认提交事件
+        <input type="submit" value="提交" /> 
+      </form>
     </yzz>
   </body>
   <script src="./index.js"></script>
